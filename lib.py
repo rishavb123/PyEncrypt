@@ -47,7 +47,7 @@ def function_wrapper(f):
         return f(p)
     return wrapper
 
-def print_encryption_table(s, f, cell_width=5):
+def print_encryption_table(s, f, cell_width=5, print_numeric_representation=False):
     """Print the encryption table for a given string and key.
 
     Args:
@@ -64,11 +64,11 @@ def print_encryption_table(s, f, cell_width=5):
     q_arr = [f(p) for p in p_arr]
     t_arr = [character_representation(q) for q in q_arr]
 
-    i_str = ''.join(['{:^' + str(cell_width) + '}|' for i in i_arr])
-    s_str = ''.join(['{:^' + str(cell_width) + '}|' for s in s_arr])
-    p_str = ''.join(['{:^' + str(cell_width) + '}|' for p in p_arr])
-    q_str = ''.join(['{:^' + str(cell_width) + '}|' for q in q_arr])
-    t_str = ''.join(['{:^' + str(cell_width) + '}|' for t in t_arr])
+    i_str = ''.join(['{:^' + str(cell_width) + '}|' for _ in i_arr])
+    s_str = ''.join(['{:^' + str(cell_width) + '}|' for _ in s_arr])
+    p_str = ''.join(['{:^' + str(cell_width) + '}|' for _ in p_arr])
+    q_str = ''.join(['{:^' + str(cell_width) + '}|' for _ in q_arr])
+    t_str = ''.join(['{:^' + str(cell_width) + '}|' for _ in t_arr])
 
     i_str = f"{'i':^{cell_width}}|" + i_str.format(*i_arr)
     line_str = '-' * len(i_str)
@@ -79,11 +79,12 @@ def print_encryption_table(s, f, cell_width=5):
     print(line_str)
     print(f"{'s[i]':^{cell_width}}|" + s_str.format(*s_arr))
 
-    print(line_str)
-    print(f"{'pi':^{cell_width}}|" + p_str.format(*p_arr))
+    if print_numeric_representation:
+        print(line_str)
+        print(f"{'pi':^{cell_width}}|" + p_str.format(*p_arr))
 
-    print(line_str)
-    print(f"{'qi':^{cell_width}}|" + q_str.format(*q_arr))
+        print(line_str)
+        print(f"{'qi':^{cell_width}}|" + q_str.format(*q_arr))
 
     print(line_str)
     print(f"{'t[i]':^{cell_width}}|" + t_str.format(*t_arr))
