@@ -96,7 +96,7 @@ def print_encryption_table(
 
     Returns:
         string: the encrypted string.
-    """    
+    """
 
     f = function_wrapper(f)
 

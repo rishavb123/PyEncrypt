@@ -1,5 +1,6 @@
 import random
 
+
 def caesar_cipher(k):
     """Generates a shift function based on the key k.
 
