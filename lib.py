@@ -135,3 +135,24 @@ def print_encryption_table(
     print(line_str)
 
     return "".join(t_arr)
+
+
+def encypt(s, f):
+    """Encrypt a string using a given encryption function.
+
+    Args:
+        s (string): the string to encrypt.
+        f (function): the encryption function (inputs and outputs a numeric representation).
+
+    Returns:
+        string: the encrypted string.
+    """
+
+    f = function_wrapper(f)
+
+    s_arr = list(s)
+    p_arr = [numeric_representation(c) for c in s_arr]
+    q_arr = [f(p_arr, i) for i in range(len(p_arr))]
+    t_arr = [character_representation(q) for q in q_arr]
+
+    return "".join(t_arr)
