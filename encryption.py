@@ -225,6 +225,24 @@ class Encryption:
 
         return "".join(temp)
 
+    def print_decryption_table(
+        self, ciphertext: str, cell_width=5, output_processor=None, show_steps=False
+    ) -> str:
+        """Prints the decryption table for the given ciphertext.
+
+        Args:
+            plaintext (str): the plaintext to be plaintext
+            cell_width (int, optional): the width of each table cell. Defaults to 5.
+            output_processor (Callable[[any], str], optional): a function to process the output before printing. Defaults to None.
+            show_steps (bool, optional): whether to show the steps of the decryption. Defaults to False.
+
+        Returns:
+            str: the decrypted plaintext
+        """
+        return self.make_decryption_object().print_encryption_table(
+            ciphertext, cell_width, output_processor, show_steps
+        )
+
     def _make_decryption_object(self) -> "Encryption":
         """Creates a decryption object
 
