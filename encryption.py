@@ -197,6 +197,7 @@ class Encryption:
             print(line_str)
             print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
         print(line_str)
+        print()
 
         return "".join(temp)
 
