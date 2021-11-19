@@ -227,8 +227,9 @@ class Encryption:
         print(line_str)
         print(f'|{"raw_string":^{name_width}}|{output_processor(plaintext):^{row_space}}|')
 
-        print(line_str)
-        print(f'|{"process_raw_string":^{name_width}}|{output_processor(preprocessed_raw_string):^{row_space}}|')
+        if show_steps:
+            print(line_str)
+            print(f'|{"process_raw_string":^{name_width}}|{output_processor(preprocessed_raw_string):^{row_space}}|')
 
         for name, line in table_lines:
             print(line_str)

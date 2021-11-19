@@ -111,5 +111,5 @@ if __name__ == "__main__":
     plaintext = "discrete math is fun"
 
     cipher.print_decryption_table(
-        cipher.print_encryption_table(plaintext, show_steps=True), show_steps=True
+        cipher.print_encryption_table(plaintext, show_steps=True), show_steps=False
     )

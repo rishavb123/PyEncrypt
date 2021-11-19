@@ -120,4 +120,4 @@ if __name__ == "__main__":
 
     ciphertext = cipher.print_encryption_table("hello world", show_steps=True)
 
-    cipher.print_decryption_table(ciphertext, show_steps=True)
+    cipher.print_decryption_table(ciphertext, show_steps=False)
