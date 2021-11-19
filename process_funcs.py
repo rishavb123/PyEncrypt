@@ -1,3 +1,7 @@
+from utils import listify
+
+
+@listify
 def to_lower_case(s: str) -> str:
     """Converts string to lower case string
 
@@ -10,6 +14,7 @@ def to_lower_case(s: str) -> str:
     return s.lower()
 
 
+@listify
 def numeric_representation(c: str) -> int:
     """Converts a character to a numeric representation
 
@@ -22,6 +27,7 @@ def numeric_representation(c: str) -> int:
     return ord(c) - 97
 
 
+@listify
 def character_representation(c: int) -> str:
     """Converts a numeric representation to a character
 
@@ -33,6 +39,8 @@ def character_representation(c: int) -> str:
     """
     return chr(c + 97)
 
+
+@listify
 def pad_numeric_representation(c: int) -> str:
     """Pads a numeric representation to an even number of characters
 
@@ -45,6 +53,8 @@ def pad_numeric_representation(c: int) -> str:
     s = str(c)
     return s.zfill(len(s) + 1) if len(s) % 2 == 1 else s
 
+
+@listify
 def convert_to_rsa_format(s: str) -> str:
     """Converts a string to the RSA format
 
@@ -54,8 +64,10 @@ def convert_to_rsa_format(s: str) -> str:
     Returns:
         str: the string in the RSA format
     """
-    return ''.join(pad_numeric_representation(numeric_representation(c)) for c in s)
+    return "".join(pad_numeric_representation(numeric_representation(c)) for c in s)
 
+
+@listify
 def remove_spaces(s: str) -> str:
     """Removes spaces from a string
 
@@ -65,8 +77,10 @@ def remove_spaces(s: str) -> str:
     Returns:
         str: the string without spaces
     """
-    return s.replace(' ', '')
+    return s.replace(" ", "")
 
+
+@listify
 def convert_each_2_digits_to_char(s: str) -> str:
     """Converts each two digits to a character
 
@@ -76,4 +90,6 @@ def convert_each_2_digits_to_char(s: str) -> str:
     Returns:
         str: the string converted to a character
     """
-    return ''.join(character_representation(int(s[i:i+2])) for i in range(0, len(s), 2))
+    return "".join(
+        character_representation(int(s[i : i + 2])) for i in range(0, len(s), 2)
+    )
