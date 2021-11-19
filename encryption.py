@@ -6,15 +6,15 @@ class Encryption:
 
     def __init__(
         self,
-        preprocess_raw_string: List[Callable[[str], str]] = [],
+        preprocess_raw_string: List[Callable[[any], str]] = [],
         preprocess: List[Callable[[List[any]], List[any]]] = [],
-        postprocess: List[Callable[[List[str]], List[str]]] = [],
+        postprocess: List[Callable[[List[any]], List[any]]] = [],
         group_by=1,
     ) -> None:
         """Initializes the object with the given attributes
 
         Args:
-            preprocess_raw_string (List[Callable[[str], str]], optional): the preprocess functions to be applied to the raw plaintext string before grouping. Defaults to [].
+            preprocess_raw_string (List[Callable[[any], any]], optional): the preprocess functions to be applied to the raw plaintext string before grouping. Defaults to [].
             preprocess (List[Callable[[any], any]], optional): a list of preprocessor functions. Defaults to [].
             postprocess (List[Callable[[any], any]], optional): a list of postprocessor function to run before outputs. Defaults to [].
             group_by (int, optional): The number of characters to group by before processing the plaintext string. Defaults to 1.
@@ -27,32 +27,33 @@ class Encryption:
         self.is_decryption_object = False
         self.params = {}
 
-    def _preprocess_raw_string(self, raw_string: str) -> str:
+    def _preprocess_raw_string(self, raw_string: any) -> any:
         """Runs the preprocess functions on the raw string
 
         Args:
-            raw_string (str): the raw string to be processed
+            raw_string (any): the raw string to be processed
 
         Returns:
-            str: the processed raw string
+            any: the processed raw string
         """
         for f in self.preprocess_raw_string:
             raw_string = f(raw_string)
         return raw_string
 
-    def _group_by(self, text: str) -> List[str]:
+    def _group_by(self, text: any) -> List[str]:
         """Groups the text by the group_by attribute
 
         Args:
-            text (str): the text to be grouped
+            text (any): the text to be grouped
 
         Returns:
-            List[str]: the text grouped in groups of self.group_by
+            List[any]: the text grouped in groups of self.group_by
         """
         if self.group_by < 0:
             group_by = len(text)
         else:
             group_by = self.group_by
+        text = str(text)
         return [text[i : i + group_by] for i in range(0, len(text), group_by)]
 
     def _preprocess(self, grouped_text: List[str]) -> List[any]:
@@ -93,30 +94,30 @@ class Encryption:
         """
         return [self._encrypt_group(group) for group in grouped_text]
 
-    def _postprocess(self, grouped_text: List[any]) -> List[str]:
+    def _postprocess(self, grouped_text: List[any]) -> List[any]:
         """Runs the postprocess functions on the grouped text
 
         Args:
             grouped_text (List[any]): the grouped text to be processed
 
         Returns:
-            List[str]: the processed grouped text
+            List[any]: the processed grouped text
         """
         for f in self.postprocess:
             grouped_text = [f(group) for group in grouped_text]
         return grouped_text
 
-    def encrypt(self, plaintext: str) -> str:
+    def encrypt(self, plaintext: any) -> any:
         """Encrypts the plaintext
 
         Args:
-            plaintext (str): the plaintext to be encrypted
+            plaintext (any): the plaintext to be encrypted
 
         Raises:
             NotImplementedError: if the method is not implemented
 
         Returns:
-            str: the encrypted ciphertext
+            any: the encrypted ciphertext
         """
 
         temp = self._preprocess_raw_string(plaintext)
@@ -126,30 +127,30 @@ class Encryption:
         temp = self._postprocess(temp)
         return "".join(temp)
 
-    def decrypt(self, ciphertext: str) -> str:
+    def decrypt(self, ciphertext: any) -> any:
         """Decrypts the ciphertext
 
         Args:
-            ciphertext (str): the ciphertext to be decrypted
+            ciphertext (any): the ciphertext to be decrypted
 
         Returns:
-            str: the decrypted plaintext
+            any: the decrypted plaintext
         """
         return self.make_decryption_object().encrypt(ciphertext)
 
     def print_encryption_table(
-        self, plaintext: str, cell_width=5, output_processor=None, show_steps=False
-    ) -> str:
+        self, plaintext: any, cell_width=5, output_processor=None, show_steps=False
+    ) -> any:
         """Prints the encryption table for the given plaintext.
 
         Args:
-            plaintext (str): the plaintext to be encrypted
+            plaintext (any): the plaintext to be encrypted
             cell_width (int, optional): the width of each table cell. Defaults to 5.
             output_processor (Callable[[any], str], optional): a function to process the output before printing. Defaults to None.
             show_steps (bool, optional): whether to show the steps of the encryption. Defaults to False.
 
         Returns:
-            str: the encrypted ciphertext
+            any: the encrypted ciphertext
         """
         if output_processor is None:
             output_processor = lambda x: str(x)
@@ -244,18 +245,18 @@ class Encryption:
         return "".join(temp)
 
     def print_decryption_table(
-        self, ciphertext: str, cell_width=5, output_processor=None, show_steps=False
-    ) -> str:
+        self, ciphertext: any, cell_width=5, output_processor=None, show_steps=False
+    ) -> any:
         """Prints the decryption table for the given ciphertext.
 
         Args:
-            plaintext (str): the plaintext to be plaintext
+            plaintext (any): the plaintext to be plaintext
             cell_width (int, optional): the width of each table cell. Defaults to 5.
             output_processor (Callable[[any], str], optional): a function to process the output before printing. Defaults to None.
             show_steps (bool, optional): whether to show the steps of the decryption. Defaults to False.
 
         Returns:
-            str: the decrypted plaintext
+            any: the decrypted plaintext
         """
         return self.make_decryption_object().print_encryption_table(
             ciphertext, cell_width, output_processor, show_steps
@@ -280,14 +281,14 @@ class Encryption:
             self.decryption_object.is_decryption_object = True
         return self.decryption_object
 
-    def __call__(self, plaintext: str) -> str:
+    def __call__(self, plaintext: any) -> any:
         """Handles the call to the object and encrypts the plaintext
 
         Args:
-            plaintext (str): the plaintext to be encrypted
+            plaintext (any): the plaintext to be encrypted
 
         Returns:
-            str: the encrypted ciphertext
+            any: the encrypted ciphertext
         """
         return self.encrypt(plaintext)
 
