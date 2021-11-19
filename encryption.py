@@ -155,11 +155,11 @@ class Encryption:
             output_processor = lambda x: str(x)
         o = lambda text_arr: [output_processor(text) for text in text_arr]
 
-        temp = self._preprocess_raw_string(plaintext)
 
         prefix = "De" if self.is_decryption_object else "En"
-        print(f"{prefix}cryption Table - " + self.__repr__() + f"({temp}):")
+        print(f"{prefix}cryption Table - " + self.__repr__() + f"({plaintext}):")
 
+        temp = self._preprocess_raw_string(plaintext)
         temp = self._group_by(temp)
         groupings = len(temp)
 
