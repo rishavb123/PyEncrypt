@@ -1,5 +1,7 @@
 from typing import List, Callable
 
+from utils import list_and_space_output_processor, listify
+
 
 class Encryption:
     """a general encryption class holding the method definitions"""
@@ -9,8 +11,8 @@ class Encryption:
         preprocess_raw_string: List[Callable[[any], str]] = [],
         preprocess: List[Callable[[List[any]], List[any]]] = [],
         postprocess: List[Callable[[List[any]], List[any]]] = [],
-        group_by: int=1,
-        consolidator: Callable[[List[any]], any]="".join,
+        group_by: int = 1,
+        consolidator: Callable[[List[any]], any] = "".join,
     ) -> None:
         """Initializes the object with the given attributes
 
@@ -143,109 +145,103 @@ class Encryption:
         return self.make_decryption_object().encrypt(ciphertext)
 
     def print_encryption_table(
-        self, plaintext: any, cell_width=5, output_processor=None, show_steps=False
+        self, plaintext: any, cell_width=5, output_processor=list_and_space_output_processor, show_steps=False
     ) -> any:
         """Prints the encryption table for the given plaintext.
 
         Args:
             plaintext (any): the plaintext to be encrypted
             cell_width (int, optional): the width of each table cell. Defaults to 5.
-            output_processor (Callable[[any], str], optional): a function to process the output before printing. Defaults to None.
+            output_processor (Callable[[any], str], optional): a function to process the output before printing. Defaults to list_and_space_output_processor.
             show_steps (bool, optional): whether to show the steps of the encryption. Defaults to False.
 
         Returns:
             any: the encrypted ciphertext
         """
         if output_processor is None:
-            output_processor = lambda x: str(x)
-        o = lambda text_arr: [output_processor(text) for text in text_arr]
+            output_processor = str
+        o = listify(output_processor)
 
         prefix = "De" if self.is_decryption_object else "En"
         print(f"{prefix}cryption Table - " + self.__repr__() + f"({plaintext}):")
         prefix = prefix.lower()
 
-        temp = self._preprocess_raw_string(plaintext)
-        temp = self._group_by(temp)
+        preprocessed_raw_string = self._preprocess_raw_string(plaintext)
+        temp = self._group_by(preprocessed_raw_string)
         groupings = len(temp)
 
         longest_func_name = max(
-            [len("groupings")]
+            [len("process_raw_string")]
             + [len(f.__name__) for f in self.preprocess + self.postprocess]
         )
 
         name_width = longest_func_name + 2
-        cell_width = max(cell_width, self.group_by + 2)
-        line_length = name_width + 2 + (cell_width + 1) * groupings
-        line_str = "-" * line_length
 
-        format_array = ["{:^" + str(cell_width) + "}"] * groupings
+        table_lines = []
+
+        def add_line(name: str, line: List[any]) -> None:
+            table_lines.append((name, o(line)))
 
         i_arr = list(range(groupings))
 
-        print(line_str)
-        print(f"|{'i':^{name_width}}|" + "|".join(format_array).format(*o(i_arr)) + "|")
+        add_line("i", i_arr)
 
-        print(line_str)
-        print(
-            f"|{'groupings':^{name_width}}|"
-            + "|".join(format_array).format(*o(temp))
-            + "|"
-        )
+        add_line("groupings", temp)
 
         for f in self.preprocess:
             temp = [f(group) for group in temp]
             if show_steps:
-                print(line_str)
-                print(
-                    f"|{f.__name__:^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line(f.__name__, temp)
 
         temp = self._encrypt(temp)
         if show_steps:
-            print(line_str)
             if self.is_decryption_object:
-                print(
-                    f"|{'decrypt':^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line("decrypt", temp)
             else:
-                print(
-                    f"|{'encrypt':^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line("encrypt", temp)
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
             if show_steps:
-                print(line_str)
-                print(
-                    f"|{f.__name__:^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line(f.__name__, temp)
 
         if not show_steps:
-            print(line_str)
             if self.is_decryption_object:
-                print(
-                    f"|{'decrypt':^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line("decrypt", temp)
             else:
-                print(
-                    f"|{'encrypt':^{name_width}}|"
-                    + "|".join(format_array).format(*o(temp))
-                    + "|"
-                )
+                add_line("encrypt", temp)
+
+        max_cell_in_line = lambda line: len(max(line[1], key=len))
+        cell_width = max(
+            cell_width,
+            max_cell_in_line(max(table_lines, key=max_cell_in_line)) + 2,
+        )
+
+        line_length = name_width + 2 + (cell_width + 1) * groupings
+        row_space = line_length - name_width - 3
+
+        line_str = "-" * line_length
+
+        format_array = ["{:^" + str(cell_width) + "}"] * groupings
+
+        print(line_str)
+        print(f'|{"raw_string":^{name_width}}|{output_processor(plaintext):^{row_space}}|')
+
+        print(line_str)
+        print(f'|{"process_raw_string":^{name_width}}|{output_processor(preprocessed_raw_string):^{row_space}}|')
+
+        for name, line in table_lines:
+            print(line_str)
+            print(f"|{name:^{name_width}}|" + "|".join(format_array).format(*line) + "|")
+
+        temp = self.consolidator(temp)
+
+        print(line_str)
+        print(f'|{"consolidated":^{name_width}}|{output_processor(temp):^{row_space}}|')
+
         print(line_str)
         print()
 
-        temp = self.consolidator(temp)
         return temp
 
     def print_decryption_table(

@@ -15,3 +15,19 @@ def listify(func: Callable[[any], any]) -> Callable[[List[any]], List[any]]:
         else:
             return func(lst)
     return wrapper
+
+def list_and_space_output_processor(x: any) -> str:
+    """Output processor to handle -65 as space and lists of objects.
+
+    Args:
+        x (any): the object to process
+
+    Returns:
+        str: the processed display string
+    """
+    if isinstance(x, list):
+        return ", ".join(map(str, x))
+    elif x == -65:
+        return " "
+    else:
+        return str(x)

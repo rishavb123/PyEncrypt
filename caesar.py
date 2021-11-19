@@ -4,6 +4,7 @@ from process_funcs import (
     numeric_representation,
     character_representation,
 )
+from utils import list_and_space_output_processor
 
 # Preproccess Raw Text
 preprocess_raw_string = [to_lower_case]
@@ -49,7 +50,7 @@ class CaesarCipher(Encryption):
         self,
         plaintext: str,
         cell_width=5,
-        output_processor=lambda x: " " if x == -65 else str(x),
+        output_processor=list_and_space_output_processor,
         show_steps=False,
     ) -> str:
         """Prints the encryption table for the given plaintext
@@ -57,7 +58,7 @@ class CaesarCipher(Encryption):
         Args:
             plaintext (str): The plaintext to encrypt
             cell_width (int, optional): the width of each table cell. Defaults to 5.
-            output_processor (function, optional): the function to process the output of the encryption steps. Defaults to lambda x: " " if x == -65 else str(x).
+            output_processor (function, optional): the function to process the output of the encryption steps. Defaults to list_and_space_output_processor.
             show_steps (bool, optional): whether to show the steps of the encryption. Defaults to False.
 
         Returns:
@@ -74,7 +75,7 @@ class CaesarCipher(Encryption):
         self,
         ciphertext: str,
         cell_width=5,
-        output_processor=lambda x: " " if x == -65 else str(x),
+        output_processor=list_and_space_output_processor,
         show_steps=False,
     ) -> str:
         """Prints the decryption table for the given ciphertext
@@ -82,7 +83,7 @@ class CaesarCipher(Encryption):
         Args:
             ciphertext (str): The ciphertext to encrypt
             cell_width (int, optional): the width of each table cell. Defaults to 5.
-            output_processor (function, optional): the function to process the output of the decryption steps. Defaults to lambda x: " " if x == -65 else str(x).
+            output_processor (function, optional): the function to process the output of the decryption steps. Defaults to list_and_space_output_processor.
             show_steps (bool, optional): whether to show the steps of the decryption. Defaults to False.
 
         Returns:
