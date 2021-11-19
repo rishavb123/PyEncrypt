@@ -1,4 +1,4 @@
-from typing import List, Callable
+from typing import List, Callable, Union
 
 from utils import list_and_space_output_processor, listify
 
@@ -145,7 +145,11 @@ class Encryption:
         return self.make_decryption_object().encrypt(ciphertext)
 
     def print_encryption_table(
-        self, plaintext: any, cell_width=5, output_processor=list_and_space_output_processor, show_steps=False
+        self,
+        plaintext: any,
+        cell_width=5,
+        output_processor=list_and_space_output_processor,
+        show_steps=False,
     ) -> any:
         """Prints the encryption table for the given plaintext.
 
@@ -166,26 +170,33 @@ class Encryption:
         print(f"{prefix}cryption Table - " + self.__repr__() + f"({plaintext}):")
         prefix = prefix.lower()
 
-        preprocessed_raw_string = self._preprocess_raw_string(plaintext)
-        temp = self._group_by(preprocessed_raw_string)
-        groupings = len(temp)
+        table_lines = []
+
+        def add_line(name: str, line: Union[List[any], any]) -> None:
+            table_lines.append((name, o(line)))
 
         longest_func_name = max(
             [len("process_raw_string")]
-            + [len(f.__name__) for f in self.preprocess + self.postprocess]
+            + [
+                len(f.__name__)
+                for f in self.preprocess_raw_string + self.preprocess + self.postprocess
+            ]
         )
-
         name_width = longest_func_name + 2
 
-        table_lines = []
+        add_line("raw_string", plaintext)
 
-        def add_line(name: str, line: List[any]) -> None:
-            table_lines.append((name, o(line)))
+        temp = plaintext
+        for f in self.preprocess_raw_string:
+            temp = f(temp)
+            if show_steps:
+                add_line(f.__name__, temp)
 
+        temp = self._group_by(temp)
+        groupings = len(temp)
         i_arr = list(range(groupings))
 
         add_line("i", i_arr)
-
         add_line("groupings", temp)
 
         for f in self.preprocess:
@@ -211,6 +222,9 @@ class Encryption:
             else:
                 add_line("encrypt", temp)
 
+        temp = self.consolidator(temp)
+        add_line("consolidated", temp)
+
         max_cell_in_line = lambda line: len(max(line[1], key=len))
         cell_width = max(
             cell_width,
@@ -224,21 +238,16 @@ class Encryption:
 
         format_array = ["{:^" + str(cell_width) + "}"] * groupings
 
-        print(line_str)
-        print(f'|{"raw_string":^{name_width}}|{output_processor(plaintext):^{row_space}}|')
-
-        if show_steps:
-            print(line_str)
-            print(f'|{"process_raw_string":^{name_width}}|{output_processor(preprocessed_raw_string):^{row_space}}|')
-
         for name, line in table_lines:
             print(line_str)
-            print(f"|{name:^{name_width}}|" + "|".join(format_array).format(*line) + "|")
-
-        temp = self.consolidator(temp)
-
-        print(line_str)
-        print(f'|{"consolidated":^{name_width}}|{output_processor(temp):^{row_space}}|')
+            if isinstance(line, list):
+                print(
+                    f"|{name:^{name_width}}|" + "|".join(format_array).format(*line) + "|"
+                )
+            else:
+                print(
+                    f"|{name:^{name_width}}|{output_processor(line):^{row_space}}|"
+                )
 
         print(line_str)
         print()
