@@ -9,7 +9,8 @@ class Encryption:
         preprocess_raw_string: List[Callable[[any], str]] = [],
         preprocess: List[Callable[[List[any]], List[any]]] = [],
         postprocess: List[Callable[[List[any]], List[any]]] = [],
-        group_by=1,
+        group_by: int=1,
+        consolidator: Callable[[List[any]], any]="".join,
     ) -> None:
         """Initializes the object with the given attributes
 
@@ -18,11 +19,13 @@ class Encryption:
             preprocess (List[Callable[[any], any]], optional): a list of preprocessor functions. Defaults to [].
             postprocess (List[Callable[[any], any]], optional): a list of postprocessor function to run before outputs. Defaults to [].
             group_by (int, optional): The number of characters to group by before processing the plaintext string. Defaults to 1.
+            consolidator (Callable[[List[any]], any], optional): the function to consolidate the grouped text. Defaults to "".join.
         """
         self.preprocess_raw_string = preprocess_raw_string
         self.preprocess = preprocess
         self.postprocess = postprocess
         self.group_by = group_by
+        self.consolidator = consolidator
         self.decryption_object = None
         self.is_decryption_object = False
         self.params = {}
@@ -125,7 +128,8 @@ class Encryption:
         temp = self._preprocess(temp)
         temp = self._encrypt(temp)
         temp = self._postprocess(temp)
-        return "".join(temp)
+        temp = self.consolidator(temp)
+        return temp
 
     def decrypt(self, ciphertext: any) -> any:
         """Decrypts the ciphertext
@@ -241,7 +245,8 @@ class Encryption:
         print(line_str)
         print()
 
-        return "".join(temp)
+        temp = self.consolidator(temp)
+        return temp
 
     def print_decryption_table(
         self, ciphertext: any, cell_width=5, output_processor=None, show_steps=False
