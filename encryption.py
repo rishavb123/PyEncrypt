@@ -159,9 +159,10 @@ class Encryption:
         groupings = len(temp)
 
         longest_func_name = max(
-            max([len(f.__name__) for f in self.preprocess + self.postprocess]),
-            len("groupings"),
+            [len("groupings")]
+            + [len(f.__name__) for f in self.preprocess + self.postprocess]
         )
+
         name_width = longest_func_name + 2
         line_length = name_width + 2 + (cell_width + 1) * groupings
         line_str = "-" * line_length
@@ -174,28 +175,48 @@ class Encryption:
         print(f"|{'i':^{name_width}}|" + "|".join(format_array).format(*o(i_arr)) + "|")
 
         print(line_str)
-        print(f"|{'groupings':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+        print(
+            f"|{'groupings':^{name_width}}|"
+            + "|".join(format_array).format(*o(temp))
+            + "|"
+        )
 
         for f in self.preprocess:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+                print(
+                    f"|{f.__name__:^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
 
         temp = self._encrypt(temp)
         if show_steps:
             print(line_str)
-            print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+            print(
+                f"|{'encrypt':^{name_width}}|"
+                + "|".join(format_array).format(*o(temp))
+                + "|"
+            )
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+                print(
+                    f"|{f.__name__:^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
 
         if not show_steps:
             print(line_str)
-            print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+            print(
+                f"|{'encrypt':^{name_width}}|"
+                + "|".join(format_array).format(*o(temp))
+                + "|"
+            )
         print(line_str)
         print()
 
