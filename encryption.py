@@ -160,7 +160,7 @@ class Encryption:
 
         longest_func_name = max(
             max([len(f.__name__) for f in self.preprocess + self.postprocess]),
-            len("encrypt"),
+            len("groupings"),
         )
         name_width = longest_func_name + 2
         line_length = name_width + 2 + (cell_width + 1) * groupings
@@ -173,6 +173,9 @@ class Encryption:
         print(line_str)
         print(f"|{'i':^{name_width}}|" + "|".join(format_array).format(*o(i_arr)) + "|")
 
+        print(line_str)
+        print(f"|{'groupings':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+
         for f in self.preprocess:
             temp = [f(group) for group in temp]
             if show_steps:
@@ -180,8 +183,9 @@ class Encryption:
                 print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
 
         temp = self._encrypt(temp)
-        print(line_str)
-        print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+        if show_steps:
+            print(line_str)
+            print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
@@ -189,9 +193,12 @@ class Encryption:
                 print(line_str)
                 print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
 
+        if not show_steps:
+            print(line_str)
+            print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
         print(line_str)
 
-        return temp
+        return "".join(temp)
 
     def _make_decryption_object(self) -> "Encryption":
         """Creates a decryption object
