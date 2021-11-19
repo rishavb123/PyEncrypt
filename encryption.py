@@ -73,6 +73,9 @@ class Encryption:
         Args:
             group (str): the group to be encrypted
 
+        Raises:
+            NotImplementedError: if the method is not implemented
+
         Returns:
             any: the encrypted group
         """
