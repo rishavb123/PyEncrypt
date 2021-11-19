@@ -133,10 +133,11 @@ class Encryption:
             show_steps (bool, optional): whether to show the steps of the encryption. Defaults to False.
 
         Returns:
-            str: the encryption ciphertext
+            str: the encrypted ciphertext
         """
         if output_processor is None:
             output_processor = lambda x: str(x)
+        o = lambda text_arr: [output_processor(text) for text in text_arr]
 
         temp = self._preprocess_raw_string(plaintext)
 
@@ -158,23 +159,23 @@ class Encryption:
         i_arr = list(range(groupings))
 
         print(line_str)
-        print(f"|{'i':^{name_width}}|" + "|".join(format_array).format(*i_arr) + "|")
+        print(f"|{'i':^{name_width}}|" + "|".join(format_array).format(*o(i_arr)) + "|")
 
         for f in self.preprocess:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*temp))
+                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*o(temp)))
 
         temp = self._encrypt(temp)
         print(line_str)
-        print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*temp))
+        print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)))
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*temp))
+                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*o(temp)))
 
         return temp
 
