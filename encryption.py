@@ -163,7 +163,7 @@ class Encryption:
             len("encrypt"),
         )
         name_width = longest_func_name + 2
-        line_length = name_width + 1 + (cell_width + 1) * groupings
+        line_length = name_width + 2 + (cell_width + 1) * groupings
         line_str = "-" * line_length
 
         format_array = ["{:^" + str(cell_width) + "}"] * groupings
@@ -177,17 +177,19 @@ class Encryption:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*o(temp)))
+                print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
 
         temp = self._encrypt(temp)
         print(line_str)
-        print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)))
+        print(f"|{'encrypt':^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
             if show_steps:
                 print(line_str)
-                print(f"|{f.__name__:{name_width}}|" + "|".join(format_array).format(*o(temp)))
+                print(f"|{f.__name__:^{name_width}}|" + "|".join(format_array).format(*o(temp)) + "|")
+
+        print(line_str)
 
         return temp
 
