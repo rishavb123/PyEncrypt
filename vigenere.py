@@ -105,10 +105,10 @@ class VigenereCipher(Encryption):
         )
 
     def _make_decryption_object(self) -> "VigenereCipher":
-        """Makes a new CaesarCipher object that is the reverse of this one
+        """Makes a new VigenereCipher object that is the reverse of this one
 
         Returns:
-            [type]: [description]
+            VigenereCipher: the reverse VigenereCipher object
         """
         n_key = "".join(character_representation([26 - i for i in self.key]))
         return VigenereCipher(n_key)
