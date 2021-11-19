@@ -24,6 +24,7 @@ class Encryption:
         self.postprocess = postprocess
         self.group_by = group_by
         self.decryption_object = None
+        self.is_decryption_object = False
         self.params = {}
 
     def _preprocess_raw_string(self, raw_string: str) -> str:
@@ -156,7 +157,8 @@ class Encryption:
 
         temp = self._preprocess_raw_string(plaintext)
 
-        print(f"Encryption Table - " + self.__repr__() + f"({temp}):")
+        prefix = "De" if self.is_decryption_object else "En"
+        print(f"{prefix}cryption Table - " + self.__repr__() + f"({temp}):")
 
         temp = self._group_by(temp)
         groupings = len(temp)
@@ -259,6 +261,7 @@ class Encryption:
         """
         if self.decryption_object is None:
             self.decryption_object = self._make_decryption_object()
+            self.decryption_object.is_decryption_object = True
         return self.decryption_object
 
     def __call__(self, plaintext: str) -> str:
