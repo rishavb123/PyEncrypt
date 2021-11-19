@@ -137,6 +137,6 @@ if __name__ == "__main__":
     rsa = RSA.make_RSA_object(43, 59, e=13)
 
     plaintext = "hello world"
-    ciphertext = rsa.print_encryption_table(plaintext, cell_width=8, show_steps=True)
+    ciphertext = rsa.print_encryption_table(plaintext, show_steps=True)
 
-    rsa.print_decryption_table(ciphertext, cell_width=8, show_steps=True)
+    rsa.print_decryption_table(ciphertext, show_steps=True)

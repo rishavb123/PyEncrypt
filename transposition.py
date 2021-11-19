@@ -67,5 +67,5 @@ if __name__ == "__main__":
     plaintext = "1234567890"
     cipher = TranspositionCipher(sigma=[3, 2, 1, 0, 4])
 
-    ciphertext = cipher.print_encryption_table(plaintext, cell_width=7)
-    cipher.print_decryption_table(ciphertext, cell_width=7)
+    ciphertext = cipher.print_encryption_table(plaintext)
+    cipher.print_decryption_table(ciphertext)

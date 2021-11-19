@@ -170,6 +170,7 @@ class Encryption:
         )
 
         name_width = longest_func_name + 2
+        cell_width = max(cell_width, self.group_by + 2)
         line_length = name_width + 2 + (cell_width + 1) * groupings
         line_str = "-" * line_length
 
