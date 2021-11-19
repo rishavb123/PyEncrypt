@@ -50,7 +50,10 @@ class TranspositionCipher(Encryption):
         Returns:
             any: [description]
         """
-        return "".join([group[self.sigma[i]] for i in range(len(group))])
+        s = [""] * self.group_by
+        for i in range(self.group_by):
+            s[self.sigma[i]] = group[i]
+        return "".join(s)
 
     def _make_decryption_object(self) -> "TranspositionCipher":
         """Creates a decryption object using sigma as the inverse of the encryption object's sigma.
