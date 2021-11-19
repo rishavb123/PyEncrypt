@@ -6,6 +6,7 @@ class Encryption:
 
     def __init__(
         self,
+        preprocess_raw_string: List[Callable[[str], str]] = [],
         preprocess: List[Callable[[List[any]], List[any]]] = [],
         postprocess: List[Callable[[List[str]], List[str]]] = [],
         group_by=1,
@@ -13,14 +14,29 @@ class Encryption:
         """Initializes the object with the given attributes
 
         Args:
+            preprocess_raw_string (List[Callable[[str], str]], optional): the preprocess functions to be applied to the raw plaintext string before grouping. Defaults to [].
             preprocess (List[Callable[[any], any]], optional): a list of preprocessor functions. Defaults to [].
             postprocess (List[Callable[[any], any]], optional): a list of postprocessor function to run before outputs. Defaults to [].
             group_by (int, optional): The number of characters to group by before processing the plaintext string. Defaults to 1.
         """
+        self.preprocess_raw_string = preprocess_raw_string
         self.preprocess = preprocess
         self.postprocess = postprocess
         self.group_by = group_by
         self.params = {}
+
+    def _preprocess_raw_string(self, raw_string: str) -> str:
+        """Runs the preprocess functions on the raw string
+
+        Args:
+            raw_string (str): the raw string to be processed
+
+        Returns:
+            str: the processed raw string
+        """
+        for f in self.preprocess_raw_string:
+            raw_string = f(raw_string)
+        return raw_string
 
     def _group_by(self, text: str) -> List[str]:
         """Groups the text by the group_by attribute
@@ -97,7 +113,9 @@ class Encryption:
         Returns:
             str: the encrypted ciphertext
         """
-        temp = self._group_by(plaintext)
+
+        temp = self._preprocess_raw_string(plaintext)
+        temp = self._group_by(temp)
         temp = self._preprocess(temp)
         temp = self._encrypt(temp)
         temp = self._postprocess(temp)
@@ -120,9 +138,11 @@ class Encryption:
         if output_processor is None:
             output_processor = lambda x: str(x)
 
-        print(f"Encryption Table - " + self.__repr__() + f"({plaintext}):")
+        temp = self._preprocess_raw_string(plaintext)
 
-        temp = self._group_by(plaintext)
+        print(f"Encryption Table - " + self.__repr__() + f"({temp}):")
+
+        temp = self._group_by(temp)
         groupings = len(temp)
 
         longest_func_name = max(
