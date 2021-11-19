@@ -14,6 +14,7 @@ def listify(func: Callable[[any], any]) -> Callable[[List[any]], List[any]]:
             return [func(elem) for elem in lst]
         else:
             return func(lst)
+    wrapper.__name__ = func.__name__
     return wrapper
 
 def list_and_space_output_processor(x: any) -> str:
