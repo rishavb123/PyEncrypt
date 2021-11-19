@@ -27,7 +27,7 @@ def list_and_space_output_processor(x: any) -> str:
         str: the processed display string
     """
     if isinstance(x, list):
-        return ", ".join(map(str, x))
+        return ", ".join(map(list_and_space_output_processor, x))
     elif x == -65:
         return " "
     else:
