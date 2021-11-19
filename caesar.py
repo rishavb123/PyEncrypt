@@ -99,7 +99,7 @@ class CaesarCipher(Encryption):
         """Makes a new CaesarCipher object that is the reverse of this one
 
         Returns:
-            [type]: [description]
+            CaesarCipher: the reverse CaesarCipher object
         """
         return CaesarCipher(-self.shift)
 
