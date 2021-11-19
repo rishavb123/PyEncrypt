@@ -66,14 +66,14 @@ class Encryption:
             grouped_text = [f(group) for group in grouped_text]
         return grouped_text
 
-    def _encrypt_group(self, group: str) -> List[any]:
+    def _encrypt_group(self, group: str) -> any:
         """Encrypts a single group
 
         Args:
             group (str): the group to be encrypted
 
         Returns:
-            List[any]: the encrypted group
+            any: the encrypted group
         """
         raise NotImplementedError
 
