@@ -43,7 +43,7 @@ class VigenereCipher(Encryption):
             l (List[int]): The list of numeric representation of characters to encrypt
 
         Returns:
-            iList[int]nt: the encrypted numeric representations of the characters
+            List[int]: the encrypted numeric representations of the characters
         """
         result = []
         for i in range(len(l)):
