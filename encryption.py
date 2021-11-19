@@ -158,6 +158,7 @@ class Encryption:
 
         prefix = "De" if self.is_decryption_object else "En"
         print(f"{prefix}cryption Table - " + self.__repr__() + f"({plaintext}):")
+        prefix = prefix.lower()
 
         temp = self._preprocess_raw_string(plaintext)
         temp = self._group_by(temp)
@@ -199,11 +200,18 @@ class Encryption:
         temp = self._encrypt(temp)
         if show_steps:
             print(line_str)
-            print(
-                f"|{'encrypt':^{name_width}}|"
-                + "|".join(format_array).format(*o(temp))
-                + "|"
-            )
+            if self.is_decryption_object:
+                print(
+                    f"|{'decrypt':^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
+            else:
+                print(
+                    f"|{'encrypt':^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
 
         for f in self.postprocess:
             temp = [f(group) for group in temp]
@@ -217,11 +225,18 @@ class Encryption:
 
         if not show_steps:
             print(line_str)
-            print(
-                f"|{'encrypt':^{name_width}}|"
-                + "|".join(format_array).format(*o(temp))
-                + "|"
-            )
+            if self.is_decryption_object:
+                print(
+                    f"|{'decrypt':^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
+            else:
+                print(
+                    f"|{'encrypt':^{name_width}}|"
+                    + "|".join(format_array).format(*o(temp))
+                    + "|"
+                )
         print(line_str)
         print()
 
