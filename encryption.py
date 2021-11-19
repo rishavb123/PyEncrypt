@@ -23,6 +23,7 @@ class Encryption:
         self.preprocess = preprocess
         self.postprocess = postprocess
         self.group_by = group_by
+        self.decryption_object = None
         self.params = {}
 
     def _preprocess_raw_string(self, raw_string: str) -> str:
@@ -121,6 +122,17 @@ class Encryption:
         temp = self._postprocess(temp)
         return "".join(temp)
 
+    def decrypt(self, ciphertext: str) -> str:
+        """Decrypts the ciphertext
+
+        Args:
+            ciphertext (str): the ciphertext to be decrypted
+
+        Returns:
+            str: the decrypted plaintext
+        """
+        return self.make_decryption_object().encrypt(ciphertext)
+
     def print_encryption_table(
         self, plaintext: str, cell_width=5, output_processor=None, show_steps=False
     ) -> str:
@@ -179,13 +191,23 @@ class Encryption:
 
         return temp
 
+    def _make_decryption_object(self) -> "Encryption":
+        """Creates a decryption object
+
+        Returns:
+            Encryption: the decryption object
+        """
+        raise NotImplementedError
+
     def make_decryption_object(self) -> "Encryption":
         """Creates a decryption object from the current object
 
         Returns:
             Encryption: the decryption object
         """
-        raise NotImplementedError
+        if self.decryption_object is None:
+            self.decryption_object = self._make_decryption_object()
+        return self.decryption_object
 
     def __call__(self, plaintext: str) -> str:
         """Handles the call to the object and encrypts the plaintext
