@@ -87,6 +87,16 @@ class RSA(Encryption):
             if self.e < 1 or self.e >= self.phi:
                 raise ValueError("e must be between 1 and phi")
 
+    def __repr__(self) -> str:
+        """Returns a string representation of the RSA object
+
+        Returns:
+            str: The string representation of the RSA object
+        """        
+        if self.p != -1 and self.q != -1:
+            return super().__repr__() + f"(n={self.n}, e={self.e}, p={self.p}, q={self.q}, phi={self.phi}, d={self.d})"
+        return super().__repr__() + f"[n={self.n}, e={self.e}]"
+
     @staticmethod
     def calculate_group_by(n: int) -> int:
         """Calculates the group by value for the RSA cipher

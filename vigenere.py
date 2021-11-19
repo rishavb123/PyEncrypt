@@ -27,6 +27,7 @@ class VigenereCipher(Encryption):
         Args:
             key (str): The key to use for the encryption
         """
+        self.skey = key
         self.key = numeric_representation(list(key))
 
         super().__init__(
@@ -110,8 +111,11 @@ class VigenereCipher(Encryption):
         Returns:
             VigenereCipher: the reverse VigenereCipher object
         """
-        n_key = "".join(character_representation([26 - i for i in self.key]))
+        n_key = "".join(character_representation([-i % 26 for i in self.key]))
         return VigenereCipher(n_key)
+
+    def __repr__(self) -> str:
+        return super().__repr__() + f"[key={self.skey}]"
 
 
 if __name__ == "__main__":

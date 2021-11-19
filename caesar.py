@@ -104,6 +104,9 @@ class CaesarCipher(Encryption):
         """
         return CaesarCipher(-self.shift)
 
+    def __repr__(self) -> str:
+        return super().__repr__() + f"[shift={self.shift}]"
+
 
 if __name__ == "__main__":
 

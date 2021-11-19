@@ -62,6 +62,12 @@ class TranspositionCipher(Encryption):
             [self.sigma.index(i) for i in range(self.group_by)], self.group_by
         )
 
+    def __repr__(self) -> str:
+        s = ""
+        for i in range(self.group_by):
+            s += f"{i}->{self.sigma[i]}; "
+        return super().__repr__() + f"[{s[:-2]}]"
+
 
 if __name__ == "__main__":
     plaintext = "1234567890"
