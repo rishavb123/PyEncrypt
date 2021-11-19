@@ -156,7 +156,6 @@ class Encryption:
             output_processor = lambda x: str(x)
         o = lambda text_arr: [output_processor(text) for text in text_arr]
 
-
         prefix = "De" if self.is_decryption_object else "En"
         print(f"{prefix}cryption Table - " + self.__repr__() + f"({plaintext}):")
         prefix = prefix.lower()
