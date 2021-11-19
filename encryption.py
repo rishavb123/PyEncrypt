@@ -82,11 +82,11 @@ class Encryption:
         """
         raise NotImplementedError
 
-    def _encrypt(self, grouped_text: List[str]) -> List[any]:
+    def _encrypt(self, grouped_text: List[any]) -> List[any]:
         """Encrypts the grouped text
 
         Args:
-            grouped_text (List[str]): the grouped text to be encrypted
+            grouped_text (List[any]): the grouped text to be encrypted
 
         Returns:
             List[any]: the encrypted grouped text
