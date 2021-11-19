@@ -116,7 +116,25 @@ class RSA(Encryption):
         Returns:
             int: the d value
         """
-        return pow(e, -1, phi) # only works for python 3.8 or higher
+        try:
+            return pow(e, -1, phi) # only works for python 3.8 or higher
+        except:
+            return RSA.calculate_d_slow(e, phi)
+
+    @staticmethod
+    def calculate_d_slow(e: int, phi: int) -> int:
+        """Calculates the d value for the RSA cipher
+
+        Args:
+            e (int): the RSA public key
+            phi (int): the RSA totient
+
+        Returns:
+            int: the d value
+        """
+        for d in range(phi):
+            if (e * d) % phi == 1:
+                return d
 
     @staticmethod
     def make_RSA_object(p: int, q: int, e: int = 65537) -> "RSA":
