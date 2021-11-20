@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 from encryption import Encryption
 from process_funcs import (
@@ -23,7 +23,7 @@ postprocess_groups_decrypt = [pad_numeric_representation, convert_each_2_digits_
 class RSA(Encryption):
     """An RSA Cipher class to perform RSA encryption. Inherits from the Encryption class"""
 
-    def __init__(self, n: int, e: int, p: int=-1, q: int=-1):
+    def __init__(self, n: int, e: int, p: int=-1, q: int=-1, calculate_p_q: bool=False) -> None:
         """Initializes the RSA Cipher class
 
         Args:
@@ -31,11 +31,15 @@ class RSA(Encryption):
             e (int): the RSA public exponent
             p (int, optional): One of the RSA primes. Defaults to -1.
             q (int, optional): The other RSA prime. Defaults to -1.
+            calculate_p_q (bool, optional): Whether or not to setup p and q. Defaults to False.
         """        
         
         self.n = n
         self.e = e
 
+        if calculate_p_q and p == -1 and q == -1:
+            p, q = RSA.calculate_p_and_q(n, e)
+        
         self.set_p_and_q(p, q)
 
         super().__init__(
@@ -145,6 +149,32 @@ class RSA(Encryption):
         for d in range(phi):
             if (e * d) % phi == 1:
                 return d
+
+    @staticmethod
+    def calculate_p_and_q(n: int, e: int) -> Tuple[int]:
+        """Calculates the p and q values for the RSA cipher
+
+        Args:
+            n (int): The RSA modulus
+            e (int): The RSA public exponent
+
+        Returns:
+            Tuple[int]: The p and q values of the RSA object
+        """        
+        if n < 2:
+            raise ValueError("n must be greater than 1")
+        if e < 2:
+            raise ValueError("e must be greater than 1")
+        if e >= n:
+            raise ValueError("e must be less than n")
+
+        for p in range(2, n):
+            if (n % p) == 0:
+                q = n // p
+                if RSA.calculate_d(e, (p - 1) * (q - 1)) != -1:
+                    return p, q
+
+        return -1, -1
 
     @staticmethod
     def make_RSA_object(p: int, q: int, e: int = 65537) -> "RSA":
