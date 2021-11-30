@@ -114,7 +114,7 @@ class RSA(Encryption):
         s = 25
         c = 0
         while int(s) < n:
-            s *= 10
+            s *= 100
             s += 25
             c += 1
         return c * 2
